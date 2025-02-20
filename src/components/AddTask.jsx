@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addTask } from "../store/taskSlice";
@@ -8,78 +9,115 @@ const AddTask = () => {
 
   const addTaskHandler = (e) => {
     e.preventDefault();
-    dispatch(addTask(task));
-    setTask({ title: "", description: "", status: "" });
+    if (task.title && task.description && task.status) {
+      dispatch(addTask(task));
+      setTask({ title: "", description: "", status: "" });
+    } else {
+      alert("Please fill out all fields.");
+    }
   };
 
   return (
-    <div className='w-full flex items-center justify-center flex-col gap-5 pt-10'>
+    <motion.div
+      initial={{ opacity: 0, y: -50 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className='w-full flex items-center justify-center flex-col gap-5 py-10 px-4 sm:px-6 lg:px-8'
+    >
       <form
-        className='bg-black  flex flex-col gap-5 min-w-[600px] p-5 rounded-2xl border border-yellow-50'
+        className='bg-gray-900 shadow-2xl rounded-lg p-6 w-full max-w-md border border-gray-700'
         onSubmit={addTaskHandler}
       >
-        <h1 className='text-3xl text-white text-center font-bold'>Add Task</h1>
-        <div>
+        <motion.h1
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.2, duration: 0.5 }}
+          className='text-3xl font-bold text-center text-white mb-6'
+        >
+          Add New Task
+        </motion.h1>
+
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.4, duration: 0.5 }}
+          className='mb-6'
+        >
           <label
             htmlFor='title'
-            className='block mb-2 text-sm font-medium text-gray-900 dark:text-white'
+            className='block text-sm font-medium text-gray-300 mb-2'
           >
             Title:
           </label>
           <input
             type='text'
-            required
             id='title'
-            onChange={(e) => setTask({ ...task, title: e.target.value })}
+            required
             value={task.title}
-            className='block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
-          ></input>
-        </div>
+            onChange={(e) => setTask({ ...task, title: e.target.value })}
+            className='w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white placeholder-gray-400'
+            placeholder='Enter task title'
+          />
+        </motion.div>
 
-        <div>
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.6, duration: 0.5 }}
+          className='mb-6'
+        >
           <label
-            htmlFor='message'
-            className='block mb-2 text-sm font-medium text-gray-900 dark:text-white'
+            htmlFor='description'
+            className='block text-sm font-medium text-gray-300 mb-2'
           >
             Description:
           </label>
           <textarea
-            id='message'
+            id='description'
             rows='4'
-            onChange={(e) => setTask({ ...task, description: e.target.value })}
+            required
             value={task.description}
-            className='block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
-            placeholder='Write your description here...'
-          ></textarea>
-        </div>
+            onChange={(e) => setTask({ ...task, description: e.target.value })}
+            className='w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white placeholder-gray-400'
+            placeholder='Enter task description'
+          />
+        </motion.div>
 
-        <div>
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.8, duration: 0.5 }}
+          className='mb-6'
+        >
           <label
             htmlFor='status'
-            className='block mb-2 text-sm font-medium text-gray-900 dark:text-white'
+            className='block text-sm font-medium text-gray-300 mb-2'
           >
             Status:
           </label>
           <select
             id='status'
-            defaultValue={task.status}
+            required
+            value={task.status}
             onChange={(e) => setTask({ ...task, status: e.target.value })}
-            className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
+            className='w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white'
           >
-            <option value=''>select status</option>
-            <option value='complete'>complete</option>
-            <option value='incomplete'>incomplete</option>
+            <option value=''>Select status</option>
+            <option value='complete'>Complete</option>
+            <option value='incomplete'>Incomplete</option>
           </select>
-        </div>
+        </motion.div>
 
-        <button
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
           type='submit'
-          className='text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 cursor-pointer hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-4 text-center me-2 mb-2'
+          className='w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-blue-700 transition duration-300'
         >
-          Add
-        </button>
+          Add Task
+        </motion.button>
       </form>
-    </div>
+    </motion.div>
   );
 };
 

@@ -1,3 +1,4 @@
+import { AnimatePresence, motion } from "framer-motion";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteTask, updateStatus } from "../store/taskSlice";
@@ -7,46 +8,67 @@ const ListTasks = () => {
   const dispatch = useDispatch();
 
   return (
-    <div className='w-1/2 mx-auto mt-10 text-white'>
-      <h1 className='text-5xl text-blue-600 font-bold mb-5'>All Tasks</h1>
-      {tasks.length > 0 ? (
-        tasks.map((item) => (
-          <div
-            key={item.id}
-            className='border p-4 rounded bg-gray-800 mb-2 flex items-center justify-between'
-          >
-            <div className='flex flex-col gap-2'>
-              <h1 className='text-xl font-semibold'>{item.title}</h1>
-              <p>{item.description}</p>
-              <select
-                id='status'
-                onChange={(e) =>
-                  dispatch(
-                    updateStatus({ id: item.id, status: e.target.value })
-                  )
-                }
-                value={item.status}
-                className={
-                  item.status === "complete"
-                    ? "text-green-500 max-w-min font-bold  p-2 border-2 border-green-500 rounded-xl"
-                    : "text-red-500 max-w-min font-bold  p-2 border-2 border-red-500 rounded-xl"
-                }
-              >
-                <option value='complete'>complete</option>
-                <option value='incomplete'>incomplete</option>
-              </select>
-            </div>
+    <div className='w-full px-4 sm:px-6 lg:px-8 py-10'>
+      <h1 className='text-4xl sm:text-5xl text-blue-600 font-bold mb-8 text-center'>
+        All Tasks
+      </h1>
 
-            <button
-              onClick={() => dispatch(deleteTask(item.id))}
-              className='bg-red-500 text-white px-4 py-2 rounded-2xl hover:bg-red-400 cursor-pointer'
-            >
-              Delete
-            </button>
-          </div>
-        ))
+      {tasks.length > 0 ? (
+        <div className='masonry-grid'>
+          <AnimatePresence>
+            {tasks.map((item) => (
+              <motion.div
+                key={item.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3 }}
+                className='masonry-item border border-gray-700 rounded-lg bg-gray-800 p-6 flex flex-col gap-4'
+              >
+                <div className='flex flex-col gap-2'>
+                  <h1 className='text-xl font-semibold text-white'>
+                    {item.title}
+                  </h1>
+                  <p className='text-gray-300'>{item.description}</p>
+                </div>
+
+                <select
+                  id='status'
+                  onChange={(e) =>
+                    dispatch(
+                      updateStatus({ id: item.id, status: e.target.value })
+                    )
+                  }
+                  value={item.status}
+                  className={
+                    item.status === "complete"
+                      ? "text-green-500 font-bold p-2 border-2 border-green-500 rounded-lg bg-transparent cursor-pointer"
+                      : "text-red-500 font-bold p-2 border-2 border-red-500 rounded-lg bg-transparent cursor-pointer"
+                  }
+                >
+                  <option value='complete'>Complete</option>
+                  <option value='incomplete'>Incomplete</option>
+                </select>
+
+                <button
+                  onClick={() => dispatch(deleteTask(item.id))}
+                  className='bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition duration-300'
+                >
+                  Delete
+                </button>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </div>
       ) : (
-        <p>No tasks available</p>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+          className='text-center text-gray-400 text-xl'
+        >
+          No tasks available. Add a new task to get started!
+        </motion.div>
       )}
     </div>
   );
